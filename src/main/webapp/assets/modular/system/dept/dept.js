@@ -158,7 +158,6 @@ layui.use(['table', 'admin', 'ax', 'ztree'], function () {
     table.on('tool(' + Dept.tableId + ')', function (obj) {
         var data = obj.data;
         var layEvent = obj.event;
-        console.log(layEvent);
         if (layEvent === 'edit') {
             Dept.onEditDept(data);
         } else if (layEvent === 'delete') {

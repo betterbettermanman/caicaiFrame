@@ -29,6 +29,10 @@ public interface DeptMapper extends BaseMapper<Dept> {
      * 获取所有部门列表
      */
     Page<Map<String, Object>> list(@Param("page") Page page, @Param("condition") String condition, @Param("deptId") String deptId);
+    /**
+     * 获取所有部门列表
+     */
+    Map<String, Object> list(@Param("condition") String condition, @Param("deptId") String deptId);
 
     /**
      * 获取所有部门树列表
@@ -38,8 +42,5 @@ public interface DeptMapper extends BaseMapper<Dept> {
      * 设置部门角色
      */
     int setRoles(String deptId, String roleIds);
-    /**
-     * 通过部门名称获取部门角色
-     */
-    String getRoleByDeptName(String deptName);
+
 }

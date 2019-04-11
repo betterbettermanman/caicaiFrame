@@ -121,7 +121,12 @@ public class DeptService extends ServiceImpl<DeptMapper, Dept> {
         Page page = LayuiPageFactory.defaultPage();
         return this.baseMapper.list(page, condition, deptId);
     }
-
+    /**
+     * 获取部门信息
+     */
+    public Map<String,Object> getDept(String condition,String deptId){
+        return this.baseMapper.list(condition, deptId);
+    }
     /**
      * 设置部门的父级ids
      *
@@ -149,10 +154,5 @@ public class DeptService extends ServiceImpl<DeptMapper, Dept> {
     public int setRoles(String deptId, String roleIds) {
         return this.baseMapper.setRoles(deptId, roleIds);
     }
-    /**
-     * 通过部门名称获取部门信息
-     */
-    public String getRolesByDeptName(String deptname){
-        return this.deptMapper.getRoleByDeptName(deptname);
-    }
+
 }

@@ -21,6 +21,16 @@ layui.use(['layer', 'form', 'table', 'ztree', 'laydate', 'admin', 'ax','upload',
             console.log(res);
         }
     });
+    /**
+     * 下载导入模板
+     */
 
-
+   /* $(document).on('click','#impExcelTemplate',function(){
+        alert("ok");
+        window.open(Feng.ctxPath+"/other/用户表.xlsx");
+    });*/
+    $("#impExcelTemplate").bind("click", function () {
+        alert("ok");
+        window.open(Feng.ctxPath+"/other/用户表.xlsx");
+    });
 });

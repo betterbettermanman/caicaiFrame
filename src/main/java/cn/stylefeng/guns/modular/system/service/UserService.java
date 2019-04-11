@@ -10,6 +10,8 @@ import cn.stylefeng.guns.core.shiro.ShiroKit;
 import cn.stylefeng.guns.core.shiro.ShiroUser;
 import cn.stylefeng.guns.core.shiro.service.UserAuthService;
 import cn.stylefeng.guns.core.util.ApiMenuFilter;
+import cn.stylefeng.guns.core.util.DateUtil;
+import cn.stylefeng.guns.modular.system.entity.Dept;
 import cn.stylefeng.guns.modular.system.entity.User;
 import cn.stylefeng.guns.modular.system.factory.UserFactory;
 import cn.stylefeng.guns.modular.system.mapper.UserMapper;
@@ -22,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -64,6 +67,38 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         this.save(UserFactory.createUser(user, password, salt));
     }
 
+    /**
+     * 批量导入用户
+     * @param list
+     */
+    public void addUser(List<Map<String,String>> list){
+        for(Map<String,String> m:list){
+            // 判断账号是否重复
+            User theUser = this.getByAccount(m.get("account"));
+            if (theUser != null) {
+                try{
+                    throw new ServiceException(BizExceptionEnum.USER_ALREADY_REG);
+                }catch(ServiceException e){
+
+                }
+
+            }
+            UserDto user = new UserDto();
+            user.setBirthday(new Date(m.get("birthday")));
+            user.setAccount(m.get("account"));
+            user.setPhone(m.get("phone"));
+            user.setName(m.get("name"));
+            user.setEmail(m.get("email"));
+            Map<String, Object> dept = deptService.getDept(m.get("deptName"), null);
+            user.setDeptId(Long.valueOf(String.valueOf(dept.get("deptId"))));
+            user.setSex("男".equals(m.get("sex"))==true?"F":"M");
+            // 完善账号信息
+            String salt = ShiroKit.getRandomSalt(5);
+            String password = ShiroKit.md5(Const.DEFAULT_PWD, salt);
+            user.setRoleId(deptService.getById(user.getDeptId()).getRoleId());
+            this.save(UserFactory.createUser(user, password, salt));
+        }
+    }
     /**
      * 修改用户
      *

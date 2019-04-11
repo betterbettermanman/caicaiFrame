@@ -50,8 +50,6 @@ public class UserFactory {
             user.setStatus(ManagerStatus.OK.getCode());
             user.setPassword(md5Password);
             user.setSalt(salt);
-            //deptService.getRolesByDeptName(userDto.get)
-            //user.setRoleId();
             return user;
         }
     }

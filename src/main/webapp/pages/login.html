@@ -92,12 +92,12 @@
                 <div class="layui-form-item">
                     <button lay-filter="login-submit" class="layui-btn layui-btn-fluid" lay-submit>登 录</button>
                 </div>
-               <!-- <div class="layui-form-item login-other">
+                <div class="layui-form-item login-other">
                     <label>第三方登录</label>
-                    <a href="javascript:;"><i class="layui-icon layui-icon-login-qq"></i></a>
-                    <a href="javascript:;"><i class="layui-icon layui-icon-login-wechat"></i></a>
-                    <a href="javascript:;"><i class="layui-icon layui-icon-login-weibo"></i></a>
-                </div>-->
+                    <span  onclick="openWindow('',600,400)"><i class="layui-icon layui-icon-login-qq"></i></span>
+                    <!--<a href="javascript:;"><i class="layui-icon layui-icon-login-wechat"></i></a>
+                    <a href="javascript:;"><i class="layui-icon layui-icon-login-weibo"></i></a>-->
+                </div>
             </form>
         </div>
     </div>
@@ -142,10 +142,23 @@
         if (errorMsg) {
             layer.msg(errorMsg, {icon: 5, anim: 6});
         }
+        window.openWindow = function(url, width, height){
+            width = width || 600;
+            height = height || 400;
+            var left = (window.screen.width - width) / 2;
+            var top = (window.screen.height - height) / 2;
+            var qqAppId = '424323422'; // 上面申请得到的appid
+            var qqAuthPath = 'http://www.test.com/auth'; // 前面设置的回调地址
+            var state = 'fjdslfjsdlkfd'; // 防止CSRF攻击的随机参数，必传，登录成功之后会回传，最好后台自己生成然后校验合法性
+            var url='https://graph.qq.com/oauth2.0/authorize?response_type=token&client_id='+qqAppId+'&state='+state;
+            window.open(url, "_blank", "toolbar=yes, location=yes, directories=no, status=no, menubar=yes, scrollbars=yes, resizable=no, copyhistory=yes, left="+left+", top="+top+", width="+width+", height="+height);
+
+        }
 
     });
 </script>
-
+<script>
+</script>
 
 </body>
 </html>

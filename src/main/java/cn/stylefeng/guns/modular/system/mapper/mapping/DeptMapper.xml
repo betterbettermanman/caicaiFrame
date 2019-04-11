@@ -45,6 +45,7 @@
         <if test="deptId != null and deptId != ''">
             and (DEPT_ID = #{deptId} or DEPT_ID in ( select DEPT_ID from sys_dept where PIDS like CONCAT('%[', #{deptId}, ']%') ))
         </if>
+
         order by SORT ASC
     </select>
 
