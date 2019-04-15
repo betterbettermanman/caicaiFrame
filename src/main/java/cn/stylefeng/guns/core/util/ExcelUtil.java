@@ -32,6 +32,12 @@ public class ExcelUtil {
         }
         return workBook;
     }
+
+    /**
+     *将Excel中的workBook处理成list集合
+     * @param workBook
+     * @return
+     */
     public static List<Map<String,String>> excelFileDigester(Workbook workBook) {
         List<Map<String,String>> spares = new ArrayList<Map<String,String>>();
         //读取第一个工作页sheet

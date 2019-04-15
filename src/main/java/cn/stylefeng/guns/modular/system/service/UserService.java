@@ -6,6 +6,7 @@ import cn.stylefeng.guns.core.common.constant.state.ManagerStatus;
 import cn.stylefeng.guns.core.common.exception.BizExceptionEnum;
 import cn.stylefeng.guns.core.common.node.MenuNode;
 import cn.stylefeng.guns.core.common.page.LayuiPageFactory;
+import cn.stylefeng.guns.core.log.factory.LogFactory;
 import cn.stylefeng.guns.core.shiro.ShiroKit;
 import cn.stylefeng.guns.core.shiro.ShiroUser;
 import cn.stylefeng.guns.core.shiro.service.UserAuthService;
@@ -20,6 +21,8 @@ import cn.stylefeng.roses.core.datascope.DataScope;
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +41,7 @@ import java.util.Map;
  */
 @Service
 public class UserService extends ServiceImpl<UserMapper, User> {
-
+    private static Logger logger = LoggerFactory.getLogger(UserService.class);
     @Autowired
     private MenuService menuService;
 
@@ -70,19 +73,21 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     /**
      * 批量导入用户
      * @param list
+     * @return 返回正确和错误的List集合
      */
-    public void addUser(List<Map<String,String>> list){
+    public List<Map> addUser(List<Map<String,String>> list){
+        List<Map> result = new ArrayList<>();
         for(Map<String,String> m:list){
             // 判断账号是否重复
             User theUser = this.getByAccount(m.get("account"));
             if (theUser != null) {
-                try{
-                    throw new ServiceException(BizExceptionEnum.USER_ALREADY_REG);
-                }catch(ServiceException e){
-
-                }
-
+                m.put("result","fail");
+                result.add(m);
+                logger.error("注册用户失败，用户已存在");
+                continue;
             }
+            m.put("result","success");
+            result.add(m);
             UserDto user = new UserDto();
             user.setBirthday(new Date(m.get("birthday")));
             user.setAccount(m.get("account"));
@@ -98,6 +103,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
             user.setRoleId(deptService.getById(user.getDeptId()).getRoleId());
             this.save(UserFactory.createUser(user, password, salt));
         }
+        return result;
     }
     /**
      * 修改用户

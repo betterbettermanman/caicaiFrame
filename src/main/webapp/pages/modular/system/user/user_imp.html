@@ -3,5 +3,19 @@
     <input name="userId" type="hidden"/>
     <button type="button" class="layui-btn" id="impExcelTemplate"><i class="layui-icon"></i>下载导入模板</button>
     <button type="button" class="layui-btn" id="uploadExcel"><i class="layui-icon"></i>上传文件</button>
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">导入成功</li>
+            <li>导入失败</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <table class="layui-table" id="userTableSuccess" lay-filter="userTable"></table>
+            </div>
+            <div class="layui-tab-item">
+                <table class="layui-table" id="userTableFailure" lay-filter="userTable"></table>
+            </div>
+        </div>
+    </div>
 </form>
 @}

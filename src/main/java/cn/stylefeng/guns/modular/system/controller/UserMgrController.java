@@ -39,6 +39,7 @@ import cn.stylefeng.roses.core.reqres.response.ResponseData;
 import cn.stylefeng.roses.core.util.ToolUtil;
 import cn.stylefeng.roses.kernel.model.exception.RequestEmptyException;
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -51,10 +52,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 系统管理员控制器
@@ -388,20 +386,26 @@ public class UserMgrController extends BaseController {
     @BussinessLog(value = "Excel批量导入用户", key = "account", dict = UserDict.class)
     @Permission(Const.ADMIN_NAME)
     @ResponseBody
-    public String impUser(@RequestParam MultipartFile file, HttpServletRequest request){
-        request.setAttribute("limit",10);
-        request.setAttribute("page",1);
+    public JSONObject impUser(@RequestParam MultipartFile file, HttpServletRequest request){
+        /*request.setAttribute("limit",10);
+        request.setAttribute("page",1);*/
+        JSONObject res = new JSONObject();
+
         // 判断文件名是否为空
         if (file == null)
             return null;
         //解析Excel文件，将其存到数据中
+        List<Map> lists=new ArrayList<>();
         try {
             List<Map<String, String>> maps = ExcelUtil.excelFileDigester(ExcelUtil.getFileExcel(file.getInputStream(), file.getOriginalFilename()));
-            userService.addUser(maps);
+            lists= userService.addUser(maps);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "success";
+        res.put("msg","");
+        res.put("code",0);
+        res.put("data",lists);
+        return res;
 
     }
 }
